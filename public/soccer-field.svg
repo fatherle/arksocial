@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="680" height="1050" viewBox="0 0 680 1050" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Field outline -->
+  <rect x="10" y="10" width="660" height="1030" stroke="white" stroke-width="2" fill="none"/>
+  
+  <!-- Center line and circle -->
+  <line x1="10" y1="525" x2="670" y2="525" stroke="white" stroke-width="2"/>
+  <circle cx="340" cy="525" r="91.5" stroke="white" stroke-width="2" fill="none"/>
+  <circle cx="340" cy="525" r="2" fill="white"/>
+  
+  <!-- Top goal box -->
+  <rect x="240" y="10" width="200" height="55" stroke="white" stroke-width="2" fill="none"/>
+  <rect x="180" y="10" width="320" height="165" stroke="white" stroke-width="2" fill="none"/>
+  
+  <!-- Bottom goal box -->
+  <rect x="240" y="985" width="200" height="55" stroke="white" stroke-width="2" fill="none"/>
+  <rect x="180" y="875" width="320" height="165" stroke="white" stroke-width="2" fill="none"/>
+  
+  <!-- Corner arcs -->
+  <path d="M10,10 A10,10 0 0,1 20,20" stroke="white" stroke-width="2" fill="none"/>
+  <path d="M670,10 A10,10 0 0,0 660,20" stroke="white" stroke-width="2" fill="none"/>
+  <path d="M10,1040 A10,10 0 0,0 20,1030" stroke="white" stroke-width="2" fill="none"/>
+  <path d="M670,1040 A10,10 0 0,1 660,1030" stroke="white" stroke-width="2" fill="none"/>
+ 
+  
+</svg>
