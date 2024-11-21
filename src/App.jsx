@@ -1,9 +1,40 @@
 import { useState } from 'react'
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
+import { TouchBackend } from 'react-dnd-touch-backend'
+import { MultiBackend, createTransition, TouchTransition } from 'react-dnd-multi-backend'
 import TacticsBoard from './components/TacticsBoard'
 import PlayerList from './components/PlayerList'
 import { UserPlusIcon } from '@heroicons/react/24/outline'
+
+const MouseTransition = createTransition('mousedown', (event) => event.type === 'mousedown')
+
+const HTML5toTouch = {
+  backends: [
+    {
+      id: 'html5',
+      backend: HTML5Backend,
+      transition: MouseTransition,
+      preview: true
+    },
+    {
+      id: 'touch',
+      backend: TouchBackend,
+      options: {
+        enableMouseEvents: false,
+        delayTouchStart: 0,
+        touchSlop: 5,
+        ignoreContextMenu: true,
+        enableHoverOutsideTarget: false,
+        enableKeyboardEvents: false,
+        enableTouchEvents: true,
+        dropEventsEnabled: true
+      },
+      preview: true,
+      transition: TouchTransition
+    }
+  ]
+}
 
 function App() {
   const [players, setPlayers] = useState([
@@ -31,16 +62,18 @@ function App() {
     { id: 22, name: 'Biqi', position: { x: 0, y: 0 }, board: null },
     { id: 23, name: '尹珂', position: { x: 0, y: 0 }, board: null },
     { id: 24, name: 'Biqi', position: { x: 0, y: 0 }, board: null },
-    { id: 25, name: 'Rivers', position: { x: 0, y: 0 }, board: null }, 
+    { id: 25, name: 'Rivers', position: { x: 0, y: 0 }, board: null },
     { id: 26, name: 'Frank', position: { x: 0, y: 0 }, board: null },
     { id: 27, name: 'Matthew', position: { x: 0, y: 0 }, board: null },
-    { id: 28, name: '郑有财', position: { x: 0, y: 0 }, board: null }, 
-    { id: 29, name: 'Alex', position: { x: 0, y: 0 }, board: null }, 
+    { id: 28, name: '郑有财', position: { x: 0, y: 0 }, board: null },
+    { id: 29, name: 'Alex', position: { x: 0, y: 0 }, board: null },
   ])
   const [showPlayerForm, setShowPlayerForm] = useState(false)
   const [showPlayerList, setShowPlayerList] = useState(false)
   const [newPlayerName, setNewPlayerName] = useState('')
   const [activeBoard, setActiveBoard] = useState('blue')
+  const [feedback, setFeedback] = useState('')
+  const [showFeedback, setShowFeedback] = useState(false)
 
   const addPlayer = () => {
     if (newPlayerName.trim()) {
@@ -79,9 +112,21 @@ function App() {
     }
   }
 
+  const showFeedbackMessage = (message) => {
+    setFeedback(message)
+    setShowFeedback(true)
+    setTimeout(() => setShowFeedback(false), 2000)
+  }
+
   return (
-    <DndProvider backend={HTML5Backend}>
+    <DndProvider backend={MultiBackend} options={HTML5toTouch}>
       <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 flex justify-center items-center py-8">
+        {/* Feedback Toast */}
+        {showFeedback && (
+          <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 bg-black bg-opacity-75 text-white px-4 py-2 rounded-lg shadow-lg">
+            {feedback}
+          </div>
+        )}
         <div className="w-full max-w-[1800px] p-4">
           <div className="flex flex-col items-center mb-12">
             <h1 className="text-4xl font-bold text-gray-800 text-center mb-2">
@@ -99,7 +144,14 @@ function App() {
                 }`}
                 onClick={() => setActiveBoard('blue')}
               >
-                <TacticsBoard id="blue" color="blue" players={players} setPlayers={setPlayers} />
+                <TacticsBoard 
+                  id="blue" 
+                  color="blue" 
+                  players={players} 
+                  setPlayers={setPlayers}
+                  onDragStart={() => showFeedbackMessage('开始拖动球员')}
+                  onDrop={(success) => showFeedbackMessage(success ? '球员已放置' : '放置失败')}
+                />
               </div>
             </div>
 
@@ -115,7 +167,6 @@ function App() {
                     <UserPlusIcon className="h-5 w-5 mr-2" />
                     安排人员
                   </button>
-
                   {showPlayerList && (
                     <div className="w-full">
                       <div className="flex justify-between items-center mb-4">
@@ -156,6 +207,7 @@ function App() {
                       
                       <PlayerList
                         players={players}
+                        setPlayers={setPlayers}
                         onAddPlayer={handleAddPlayer}
                         showForm={showPlayerForm}
                         setShowForm={setShowPlayerForm}
@@ -176,7 +228,14 @@ function App() {
                 }`}
                 onClick={() => setActiveBoard('red')}
               >
-                <TacticsBoard id="red" color="red" players={players} setPlayers={setPlayers} />
+                <TacticsBoard 
+                  id="red" 
+                  color="red" 
+                  players={players} 
+                  setPlayers={setPlayers}
+                  onDragStart={() => showFeedbackMessage('开始拖动球员')}
+                  onDrop={(success) => showFeedbackMessage(success ? '球员已放置' : '放置失败')}
+                />
               </div>
             </div>
           </div>
