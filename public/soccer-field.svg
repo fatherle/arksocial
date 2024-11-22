@@ -1,6 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg width="680" height="1050" viewBox="0 0 680 1050" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <!-- Field outline -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 1050">
+  <!-- Main outline -->
   <rect x="10" y="10" width="660" height="1030" stroke="white" stroke-width="2" fill="none"/>
   
   <!-- Center line and circle -->
@@ -8,19 +7,23 @@
   <circle cx="340" cy="525" r="91.5" stroke="white" stroke-width="2" fill="none"/>
   <circle cx="340" cy="525" r="2" fill="white"/>
   
-  <!-- Top goal box -->
-  <rect x="240" y="10" width="200" height="55" stroke="white" stroke-width="2" fill="none"/>
+  <!-- Top penalty area and goal area -->
   <rect x="180" y="10" width="320" height="165" stroke="white" stroke-width="2" fill="none"/>
+  <rect x="240" y="10" width="200" height="55" stroke="white" stroke-width="2" fill="none"/>
   
-  <!-- Bottom goal box -->
-  <rect x="240" y="985" width="200" height="55" stroke="white" stroke-width="2" fill="none"/>
+  <!-- Top penalty spot and arc -->
+  <circle cx="340" cy="120" r="2" fill="white"/>
+  <path d="M 270,175 A 91.5,91.5 0 0,0 410,175" stroke="white" stroke-width="2" fill="none"/>
+  
+  <!-- Bottom penalty area and goal area -->
   <rect x="180" y="875" width="320" height="165" stroke="white" stroke-width="2" fill="none"/>
+  <rect x="240" y="985" width="200" height="55" stroke="white" stroke-width="2" fill="none"/>
   
-  <!-- Corner arcs -->
-  <path d="M10,10 A10,10 0 0,1 20,20" stroke="white" stroke-width="2" fill="none"/>
-  <path d="M670,10 A10,10 0 0,0 660,20" stroke="white" stroke-width="2" fill="none"/>
-  <path d="M10,1040 A10,10 0 0,0 20,1030" stroke="white" stroke-width="2" fill="none"/>
-  <path d="M670,1040 A10,10 0 0,1 660,1030" stroke="white" stroke-width="2" fill="none"/>
- 
-  
+  <!-- Bottom penalty spot and arc -->
+  <circle cx="340" cy="930" r="2" fill="white"/>
+  <path d="M 270,875 A 91.5,91.5 0 0,1 410,875" stroke="white" stroke-width="2" fill="none"/>
+
+  <!-- Goals -->
+  <rect x="290" y="0" width="100" height="10" stroke="white" stroke-width="2" fill="none"/>
+  <rect x="290" y="1040" width="100" height="10" stroke="white" stroke-width="2" fill="none"/>
 </svg>
