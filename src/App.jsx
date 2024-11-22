@@ -118,6 +118,86 @@ function App() {
     setTimeout(() => setShowFeedback(false), 2000)
   }
 
+  const handleRandomAllocation = () => {
+    // Formation positions for 4-4-2 (percentages of field width and height)
+    const positions = {
+      goalkeeper: [
+        { x: 50, y: 92 }  // Centered goalkeeper near goal
+      ],
+      defenders: [
+        { x: 20, y: 80 }, // Left back
+        { x: 40, y: 80 }, // Left center back
+        { x: 60, y: 80 }, // Right center back
+        { x: 80, y: 80 }  // Right back
+      ],
+      midfielders: [
+        { x: 20, y: 60 }, // Left midfielder
+        { x: 40, y: 60 }, // Left center mid
+        { x: 60, y: 60 }, // Right center mid
+        { x: 80, y: 60 }  // Right midfielder
+      ],
+      forwards: [
+        { x: 35, y: 40 }, // Left striker
+        { x: 65, y: 40 }  // Right striker
+      ]
+    }
+
+    // Get unassigned players
+    const unassignedPlayers = players.filter(p => !p.board)
+    if (unassignedPlayers.length < 24) {
+      alert('需要至少24名未分配球员进行随机分配')
+      return
+    }
+
+    // Shuffle unassigned players
+    const shuffledPlayers = [...unassignedPlayers].sort(() => Math.random() - 0.5)
+    
+    // Combine all positions in formation order
+    const allPositions = [
+      ...positions.goalkeeper,
+      ...positions.defenders,
+      ...positions.midfielders,
+      ...positions.forwards
+    ]
+
+    // First 11 players to blue team
+    const blueTeamPlayers = shuffledPlayers.slice(0, 11).map((p, i) => ({
+      ...p,
+      board: 'blue',
+      position: allPositions[i]
+    }))
+
+    // Next 11 players to red team (mirror positions)
+    const redTeamPlayers = shuffledPlayers.slice(11, 22).map((p, i) => ({
+      ...p,
+      board: 'red',
+      position: {
+        x: allPositions[i].x, // Keep X position (horizontal)
+        y: 100 - allPositions[i].y // Mirror Y position (vertical)
+      }
+    }))
+
+    // Update all players
+    setPlayers(prev => {
+      const remainingPlayers = prev.filter(p => 
+        !blueTeamPlayers.find(bp => bp.id === p.id) && 
+        !redTeamPlayers.find(rp => rp.id === p.id)
+      )
+      return [...remainingPlayers, ...blueTeamPlayers, ...redTeamPlayers]
+    })
+
+    showFeedbackMessage('已完成随机分配')
+  }
+
+  const handleRefresh = () => {
+    setPlayers(prev => prev.map(p => ({
+      ...p,
+      board: null,
+      position: { x: 0, y: 0 }
+    })))
+    showFeedbackMessage('已重置所有球员')
+  }
+
   return (
     <DndProvider backend={MultiBackend} options={HTML5toTouch}>
       <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 flex justify-center items-center py-8">
@@ -159,13 +239,28 @@ function App() {
               <div className="w-full max-w-md bg-white rounded-xl shadow-lg p-6">
                 <div className="flex flex-col items-center gap-4">
                   <button
+                    onClick={handleRandomAllocation}
+                    className="w-full flex items-center justify-center px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-all duration-200 shadow-md hover:shadow-lg"
+                  >
+                    随机安排
+                  </button>
+                  <button
                     onClick={togglePlayerList}
                     className={`w-full flex items-center justify-center px-6 py-3 ${
-                      showPlayerList ? 'bg-green-700' : 'bg-green-600'
-                    } text-white rounded-lg hover:bg-green-700 transition-all duration-200 shadow-md hover:shadow-lg`}
+                      showPlayerList ? 'bg-blue-700' : 'bg-blue-600'
+                    } text-white rounded-lg hover:bg-blue-700 transition-all duration-200 shadow-md hover:shadow-lg`}
                   >
                     <UserPlusIcon className="h-5 w-5 mr-2" />
                     安排人员
+                  </button>
+                  <button
+                    onClick={handleRefresh}
+                    className="w-full flex items-center justify-center px-6 py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-all duration-200 shadow-md hover:shadow-lg"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="h-5 w-5 mr-2">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+                    </svg>
+                    重置球员
                   </button>
                   {showPlayerList && (
                     <div className="w-full">
@@ -179,6 +274,7 @@ function App() {
                         </button>
                       </div>
                       
+
                       {showPlayerForm && (
                         <div className="mb-4 p-4 bg-gray-50 rounded-lg">
                           <input
@@ -205,6 +301,7 @@ function App() {
                         </div>
                       )}
                       
+
                       <PlayerList
                         players={players}
                         setPlayers={setPlayers}
